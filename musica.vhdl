@@ -2,12 +2,12 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
-entity DivisorClock is
+entity musica is
   generic (
     S : natural := 113637;
-    T : natural := 50000000;
+    T : natural := 12500000;
     M : natural := 16;
-    Z : natural := 32;
+    Z : natural := 32
   );
   port (
     ligar : in  std_logic;
@@ -15,36 +15,71 @@ entity DivisorClock is
     clock_in : in  std_logic;
     clock_out : out std_logic
   );
-end entity DivisorClock;
+end entity musica;
 
-architecture Behavioral of DivisorClock is
+architecture Behavioral of musica is
   signal counterS : natural range 0 to S-1 := 0;
   signal counterT : natural range 0 to T-1 := 0; 
   signal counterM : natural range 0 to M-1 := 0;
   signal counterZ : natural range 0 to Z-1 := 0; 
   signal clockT : std_logic := '0';
   signal clockS : std_logic := '0';
-  signal estadoZ : tipo_estadoZ;
+  signal clockI : std_logic := '0';
+  signal escolherP : std_logic := '0';
+  signal escolherA : std_logic := '0';
   type tipo_estadoZ is (n1, n2, n3, n4, n5, n6, n7, n8, n9, n10, n11, n12, n13, n14, n15, n16, n17, n18, n19, n20, n21, n22, n23, n24, n25, n26, n27, n28, n29, n30, n31, n32);
-  signal estadoM : tipo_estadoM;
   type tipo_estadoM is (n1, n2, n3, n4, n5, n6, n7, n8, n9, n10, n11, n12, n13, n14);
+  signal estadoZ : tipo_estadoZ;
+  signal estadoM : tipo_estadoM;
 begin
 
 
-  process(clock_in, clockT, ligar, escolher, counterZ, counterM)
+  process(clock_in, ligar, escolher)
   begin
     if (ligar = '1') then
+		if rising_edge(clock_in) then
+        if ((escolherA xor escolherP) = '1') then
+            escolherP <= escolher;
+            counterZ <= 0;
+            counterM <= 0;
+			end if;
+
+		
+				if counterT = T-1 then
+					counterT <= 0;
+					clockT <= not clockT;
+					if clockT = '1' then
+						if counterZ = Z-1 then
+							counterZ <= 0;
+						elsif counterM = M-1 then
+							counterM <= 0;
+						elsif (escolher = '0') then
+							counterZ <= counterZ + 1;
+						elsif (escolher = '1') then
+							counterM <= counterM + 1;
+						end if;
+					end if;
+				else
+					counterT <= counterT + 1;
+				end if;
+				
+				
+				if counterS = S-1 then
+					counterS <= 0;
+					clockS <= not clockS;
+				else
+					counterS <= counterS + 1;
+				end if;
+
         if (escolher = '0') then
             case estadoZ is
                 when n1 =>  
 
-                            if rising_edge(clock_in) then
-                                counterS <= counterS + 1;
+
                                 if counterS = 15943 then
                                     counterS <= 0;
                                     clockS <= not clockS;
                                 end if;
-                            end if;
 
                             if counterZ = 1 then
                             counterS <= 0;
@@ -55,13 +90,10 @@ begin
 
                 when n2 =>  
                 
-                            if rising_edge(clock_in) then
-                                counterS <= counterS + 1;
                                 if counterS = 31887 then
                                     counterS <= 0;
                                     clockS <= not clockS;
                                 end if;
-                            end if;
                 
                             if counterZ = 2 then
                             counterS <= 0;
@@ -72,13 +104,10 @@ begin
 
                 when n3 =>  
                 
-                            if rising_edge(clock_in) then
-                                counterS <= counterS + 1;
                                 if counterS = 23877 then
                                     counterS <= 0;
                                     clockS <= not clockS;
                                 end if;
-                            end if;
                             
                             if counterZ = 3 then 
                             counterS <= 0;
@@ -89,13 +118,10 @@ begin
 
                 when n4 =>  
                 
-                            if rising_edge(clock_in) then
-                                counterS <= counterS + 1;
                                 if counterS = 18953 then
                                     counterS <= 0;
                                     clockS <= not clockS;
                                 end if;
-                            end if;
                 
                             if counterZ = 4 then 
                             counterS <= 0;
@@ -106,13 +132,11 @@ begin
 
                 when n5 =>  
                 
-                            if rising_edge(clock_in) then
-                                counterS <= counterS + 1;
                                 if counterS = 20079 then
                                     counterS <= 0;
                                     clockS <= not clockS;
                                 end if;
-                            end if;
+
                 
                             if counterZ = 5 then 
                             counterS <= 0;
@@ -123,13 +147,10 @@ begin
 
                 when n6 =>  
                 
-                            if rising_edge(clock_in) then
-                                counterS <= counterS + 1;
                                 if counterS = 31887 then
                                     counterS <= 0;
                                     clockS <= not clockS;
                                 end if;
-                            end if;
                 
                             if counterZ = 6 then 
                             counterS <= 0;
@@ -140,13 +161,12 @@ begin
 
                 when n7 =>  
                 
-                            if rising_edge(clock_in) then
-                                counterS <= counterS + 1;
+             
                                 if counterS = 12657 then
                                     counterS <= 0;
                                     clockS <= not clockS;
                                 end if;
-                            end if;
+
                 
                             if counterZ = 7 then 
                             counterS <= 0;
@@ -156,14 +176,11 @@ begin
                             end if;
 
                 when n8 =>  
-                
-                            if rising_edge(clock_in) then
-                                counterS <= counterS + 1;
+              
                                 if counterS = 25303 then
                                     counterS <= 0;
                                     clockS <= not clockS;
                                 end if;
-                            end if;
                 
                             if counterZ = 8 then 
                             counterS <= 0;
@@ -174,13 +191,10 @@ begin
 
                 when n9 =>  
                 
-                            if rising_edge(clock_in) then
-                                counterS <= counterS + 1;
                                 if counterS = 14204 then
                                     counterS <= 0;
                                     clockS <= not clockS;
                                 end if;
-                            end if;
                 
                             if counterZ = 9 then 
                             counterS <= 0;
@@ -191,13 +205,10 @@ begin
 
                 when n10 => 
                 
-                            if rising_edge(clock_in) then
-                                counterS <= counterS + 1;
                                 if counterS = 23877 then
                                     counterS <= 0;
                                     clockS <= not clockS;
                                 end if;
-                            end if;
                 
                             if counterZ = 10 then 
                             counterS <= 0;
@@ -208,13 +219,10 @@ begin
 
                 when n11 => 
                 
-                            if rising_edge(clock_in) then
-                                counterS <= counterS + 1;
                                 if counterS = 18953 then
                                     counterS <= 0;
                                     clockS <= not clockS;
                                 end if;
-                            end if;
                 
                             if counterZ = 11 then 
                             counterS <= 0;
@@ -225,13 +233,10 @@ begin
 
                 when n12 => 
                 
-                            if rising_edge(clock_in) then
-                                counterS <= counterS + 1;
                                 if counterS = 14204 then
                                     counterS <= 0;
                                     clockS <= not clockS;
                                 end if;
-                            end if;
                 
                             if counterZ = 12 then 
                             counterS <= 0;
@@ -242,13 +247,10 @@ begin
 
                 when n13 => 
                 
-                            if rising_edge(clock_in) then
-                                counterS <= counterS + 1;
                                 if counterS = 15943 then
                                     counterS <= 0;
                                     clockS <= not clockS;
                                 end if;
-                            end if;
                 
                             if counterZ = 13 then 
                             counterS <= 0;
@@ -259,13 +261,10 @@ begin
 
                 when n14 => 
                 
-                            if rising_edge(clock_in) then
-                                counterS <= counterS + 1;
                                 if counterS = 23877 then
                                     counterS <= 0;
                                     clockS <= not clockS;
                                 end if;
-                            end if;
                 
                             if counterZ = 14 then 
                             counterS <= 0;
@@ -276,13 +275,10 @@ begin
 
                 when n15 => 
                 
-                            if rising_edge(clock_in) then
-                                counterS <= counterS + 1;
                                 if counterS = 21276 then
                                     counterS <= 0;
                                     clockS <= not clockS;
                                 end if;
-                            end if;
                 
                             if counterZ = 15 then 
                             counterS <= 0;
@@ -293,13 +289,10 @@ begin
 
                 when n16 => 
                 
-                            if rising_edge(clock_in) then
-                                counterS <= counterS + 1;
                                 if counterS = 18953 then
                                     counterS <= 0;
                                     clockS <= not clockS;
                                 end if;
-                            end if;
                 
                             if counterZ = 16 then 
                             counterS <= 0;
@@ -310,13 +303,10 @@ begin
 
                 when n17 => 
                 
-                            if rising_edge(clock_in) then
-                                counterS <= counterS + 1;
                                 if counterS = 14204 then
                                     counterS <= 0;
                                     clockS <= not clockS;
                                 end if;
-                            end if;
                 
                             if counterZ = 17 then 
                             counterS <= 0;
@@ -327,13 +317,10 @@ begin
 
                 when n18 => 
                 
-                            if rising_edge(clock_in) then
-                                counterS <= counterS + 1;
                                 if counterS = 23877 then
                                     counterS <= 0;
                                     clockS <= not clockS;
                                 end if;
-                            end if;
                 
                             if counterZ = 18 then 
                             counterS <= 0;
@@ -344,13 +331,10 @@ begin
 
                 when n19 => 
                 
-                            if rising_edge(clock_in) then
-                                counterS <= counterS + 1;
                                 if counterS = 17894 then
                                     counterS <= 0;
                                     clockS <= not clockS;
                                 end if;
-                            end if;
                 
                             if counterZ = 19 then 
                             counterS <= 0;
@@ -361,13 +345,10 @@ begin
 
                 when n20 => 
                 
-                            if rising_edge(clock_in) then
-                                counterS <= counterS + 1;
                                 if counterS = 14204 then
                                     counterS <= 0;
                                     clockS <= not clockS;
                                 end if;
-                            end if;
                 
                             if counterZ = 20 then 
                             counterS <= 0;
@@ -378,13 +359,10 @@ begin
 
                 when n21 => 
                 
-                            if rising_edge(clock_in) then
-                                counterS <= counterS + 1;
                                 if counterS = 15050 then
                                     counterS <= 0;
                                     clockS <= not clockS;
                                 end if;
-                            end if;
                 
                             if counterZ = 21 then 
                             counterS <= 0;
@@ -395,13 +373,10 @@ begin
 
                 when n22 => 
                 
-                            if rising_edge(clock_in) then
-                                counterS <= counterS + 1;
                                 if counterS = 23877 then
                                     counterS <= 0;
                                     clockS <= not clockS;
                                 end if;
-                            end if;
                 
                             if counterZ = 22 then 
                             counterS <= 0;
@@ -412,13 +387,10 @@ begin
 
                 when n23 => 
                 
-                            if rising_edge(clock_in) then
-                                counterS <= counterS + 1;
                                 if counterS = 21276 then
                                     counterS <= 0;
                                     clockS <= not clockS;
                                 end if;
-                            end if;
                 
                             if counterZ = 23 then 
                             counterS <= 0;
@@ -429,13 +401,10 @@ begin
 
                 when n24 => 
                 
-                            if rising_edge(clock_in) then
-                                counterS <= counterS + 1;
                                 if counterS = 17894 then
                                     counterS <= 0;
                                     clockS <= not clockS;
                                 end if;
-                            end if;
                 
                             if counterZ = 24 then 
                             counterS <= 0;
@@ -446,13 +415,10 @@ begin
 
                 when n25 => 
                 
-                            if rising_edge(clock_in) then
-                                counterS <= counterS + 1;
                                 if counterS = 18953 then
                                     counterS <= 0;
                                     clockS <= not clockS;
                                 end if;
-                            end if;
                 
                             if counterZ = 25 then 
                             counterS <= 0;
@@ -463,13 +429,10 @@ begin
 
                 when n26 => 
                 
-                            if rising_edge(clock_in) then
-                                counterS <= counterS + 1;
                                 if counterS = 31887 then
                                     counterS <= 0;
                                     clockS <= not clockS;
                                 end if;
-                            end if;
                 
                             if counterZ = 26 then 
                             counterS <= 0;
@@ -479,13 +442,10 @@ begin
 
                 when n27 => 
                 
-                            if rising_edge(clock_in) then
-                                counterS <= counterS + 1;
                                 if counterS = 23877 then
                                     counterS <= 0;
                                     clockS <= not clockS;
                                 end if;
-                            end if;
                 
                             if counterZ = 27 then 
                             counterS <= 0;
@@ -496,13 +456,10 @@ begin
 
                 when n28 => 
                 
-                            if rising_edge(clock_in) then
-                                counterS <= counterS + 1;
                                 if counterS = 18953 then
                                     counterS <= 0;
                                     clockS <= not clockS;
                                 end if;
-                            end if;
                 
                             if counterZ = 28 then 
                             counterS <= 0;
@@ -513,13 +470,10 @@ begin
 
                 when n29 => 
                 
-                            if rising_edge(clock_in) then
-                                counterS <= counterS + 1;
                                 if counterS = 21276 then
                                     counterS <= 0;
                                     clockS <= not clockS;
                                 end if;
-                            end if;
                 
                             if counterZ = 29 then 
                             counterS <= 0;
@@ -530,13 +484,10 @@ begin
 
                 when n30 => 
                 
-                            if rising_edge(clock_in) then
-                                counterS <= counterS + 1;
                                 if counterS = 28408 then
                                     counterS <= 0;
                                     clockS <= not clockS;
                                 end if;
-                            end if;
                 
                             if counterZ = 30 then 
                             counterS <= 0;
@@ -547,13 +498,10 @@ begin
 
                 when n31 => 
                 
-                            if rising_edge(clock_in) then
-                                counterS <= counterS + 1;
                                 if counterS = 25303 then
                                     counterS <= 0;
                                     clockS <= not clockS;
                                 end if;
-                            end if;
                 
                             if counterZ = 31 then 
                             counterS <= 0;
@@ -564,13 +512,10 @@ begin
 
                 when n32 => 
                 
-                            if rising_edge(clock_in) then
-                                counterS <= counterS + 1;
                                 if counterS = 21276 then
                                     counterS <= 0;
                                     clockS <= not clockS;
                                 end if;
-                            end if;
                 
                             if counterZ = 0 then 
                             counterS <= 0;
@@ -588,13 +533,10 @@ begin
 
                 when n1 =>  
 
-                if rising_edge(clock_in) then
-                    counterS <= counterS + 1;
                     if counterS = 113635 then
                         counterS <= 0;
                         clockS <= not clockS;
                     end if;
-                end if;
 
                 if counterM = 1 then
                 counterS <= 0;
@@ -605,13 +547,10 @@ begin
 
                 when n2 =>  
 
-                if rising_edge(clock_in) then
-                    counterS <= counterS + 1;
                     if counterS = 110131 then
                         counterS <= 0;
                         clockS <= not clockS;
                     end if;
-                end if;
 
                 if counterM = 2 then
                 counterS <= 0;
@@ -622,13 +561,10 @@ begin
 
                 when n3 =>  
 
-                if rising_edge(clock_in) then
-                    counterS <= counterS + 1;
                     if counterS = 56817 then
                         counterS <= 0;
                         clockS <= not clockS;
                     end if;
-                end if;
 
                 if counterM = 3 then
                 counterS <= 0;
@@ -639,13 +575,10 @@ begin
 
                 when n4 =>  
 
-                if rising_edge(clock_in) then
-                    counterS <= counterS + 1;
                     if counterS = 50606 then
                         counterS <= 0;
                         clockS <= not clockS;
                     end if;
-                end if;
 
                 if counterM = 4 then
                 counterS <= 0;
@@ -656,13 +589,10 @@ begin
 
                 when n5 =>  
 
-                if rising_edge(clock_in) then
-                    counterS <= counterS + 1;
                     if counterS = 45125 then
                         counterS <= 0;
                         clockS <= not clockS;
                     end if;
-                end if;
 
                 if counterM = 5 then
                 counterS <= 0;
@@ -673,13 +603,10 @@ begin
 
                 when n6 =>  
 
-                if rising_edge(clock_in) then
-                    counterS <= counterS + 1;
                     if counterS = 50606 then
                         counterS <= 0;
                         clockS <= not clockS;
                     end if;
-                end if;
 
                 if counterM = 6 then
                 counterS <= 0;
@@ -690,13 +617,10 @@ begin
 
                 when n7 =>  
 
-                if rising_edge(clock_in) then
-                    counterS <= counterS + 1;
                     if counterS = 56817 then
                         counterS <= 0;
                         clockS <= not clockS;
                     end if;
-                end if;
 
                 if counterM = 7 then
                 counterS <= 0;
@@ -707,13 +631,10 @@ begin
 
                 when n8 =>  
 
-                if rising_edge(clock_in) then
-                    counterS <= counterS + 1;
                     if counterS = 75757 then
                         counterS <= 0;
                         clockS <= not clockS;
                     end if;
-                end if;
 
                 if counterM = 8 then
                 counterS <= 0;
@@ -724,13 +645,10 @@ begin
 
                 when n9 =>  
 
-                if rising_edge(clock_in) then
-                    counterS <= counterS + 1;
                     if counterS = 85033 then
                         counterS <= 0;
                         clockS <= not clockS;
                     end if;
-                end if;
 
                 if counterM = 9 then
                 counterS <= 0;
@@ -741,13 +659,10 @@ begin
 
                 when n10 =>  
 
-                if rising_edge(clock_in) then
-                    counterS <= counterS + 1;
                     if counterS = 67567 then
                         counterS <= 0;
                         clockS <= not clockS;
                     end if;
-                end if;
 
                 if counterM = 10 then
                 counterS <= 0;
@@ -758,13 +673,10 @@ begin
 
                 when n11 =>  
 
-                if rising_edge(clock_in) then
-                    counterS <= counterS + 1;
                     if counterS = 45125 then
                         counterS <= 0;
                         clockS <= not clockS;
                     end if;
-                end if;
 
                 if counterM = 11 then
                 counterS <= 0;
@@ -775,13 +687,10 @@ begin
 
                 when n12 =>  
 
-                if rising_edge(clock_in) then
-                    counterS <= counterS + 1;
                     if counterS = 37935 then
                         counterS <= 0;
                         clockS <= not clockS;
                     end if;
-                end if;
 
                 if counterM = 12 then
                 counterS <= 0;
@@ -792,13 +701,10 @@ begin
 
                 when n13 =>  
 
-                if rising_edge(clock_in) then
-                    counterS <= counterS + 1;
                     if counterS = 45125 then
                         counterS <= 0;
                         clockS <= not clockS;
                     end if;
-                end if;
 
                 if counterM = 13 then
                 counterS <= 0;
@@ -809,15 +715,12 @@ begin
 
                 when n14 =>  
 
-                if rising_edge(clock_in) then
-                    counterS <= counterS + 1;
                     if counterS = 56817 then
                         counterS <= 0;
                         clockS <= not clockS;
                     end if;
-                end if;
 
-                if (counterM = 15 or counterM = 0) then
+                if (counterM = 0) then
                 counterS <= 0;
                 counterM <= 0;
                 estadoM <= n1;
@@ -827,62 +730,23 @@ begin
                 
 
                 when others => 
-                clockS <= '0';
-                counterS <= 0; 
                 estadoM <= n1; 
             end case;
         end if;
+	 end if;
+	 
     elsif (ligar = '0') then
         clockS <= '0';
         counterS <= 0;
-    end if;
-  end process;
-
-
-  process(clockT, ligar, escolher)
-  begin
-    if rising_edge(clock_in) and (ligar = '1') then
-      counterT <= counterT + 1;
-      if counterT = T-1 then
-        counterT <= 0;
-        clockT <= not clockT;
-      end if;
-    elsif (ligar = '0') then
-        counterT <= 0;
-        clockT <= '0';
-    end if;
-  end process;
-
-
-  process(clockT, ligar, escolher)
-  begin
-    if rising_edge(clockT) and (ligar = '1') then
-        if counterZ = Z-1 then
-            counterZ <= 0;
-        end if;
-        if counterM = M-1 then
-            counterM <= 0;
-        end if;
-        if (escolher = '0') then
-            counterZ <= counterZ + 1;
-        elsif (escolher = '1') then
-            counterM <= counterM + 1;
-        end if;
-    elsif (ligar = '0') then
+		counterT <= 0;
+		clockT <= '0';
         counterZ <= 0;
         counterM <= 0;
+		  
     end if;
   end process;
 
-
-  process(escolher)
-  begin
-    if ((rising_edge(escolher) or falling_edge(escolher)) and (ligar = '1')) then
-        counterZ <= 0;
-        counterM <= 0;
-    end if;
-  end process;
-
+  escolherA <= escolher;
   clock_out <= clockS; 
 
 end architecture Behavioral;
