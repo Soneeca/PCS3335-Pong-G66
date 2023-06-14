@@ -13,6 +13,7 @@ entity musica is
     ligar : in  std_logic;
     escolher : in  std_logic;
     clock_in : in  std_logic;
+	 medida : out std_logic;
     clock_out : out std_logic
   );
 end entity musica;
@@ -24,27 +25,29 @@ architecture Behavioral of musica is
   signal counterZ : natural range 0 to Z-1 := 0; 
   signal clockT : std_logic := '0';
   signal clockS : std_logic := '0';
-  signal clockI : std_logic := '0';
   signal escolherP : std_logic := '0';
-  signal escolherA : std_logic := '0';
-  type tipo_estadoZ is (n1, n2, n3, n4, n5, n6, n7, n8, n9, n10, n11, n12, n13, n14, n15, n16, n17, n18, n19, n20, n21, n22, n23, n24, n25, n26, n27, n28, n29, n30, n31, n32);
-  type tipo_estadoM is (n1, n2, n3, n4, n5, n6, n7, n8, n9, n10, n11, n12, n13, n14);
-  signal estadoZ : tipo_estadoZ;
-  signal estadoM : tipo_estadoM;
+  signal escolherA : std_logic := '1';
+  type tipo_estadoZ is (n1, n2, n3, n4, n5, n6, n7, n8, n9, n10, n11, n12, n13, n14, n15, n16, n17, n18, n19, n20, n21, n22, n23, n24, n25, n26, n27, n28, n29, n30, n31, n32, x);
+  type tipo_estadoM is (n1, n2, n3, n4, n5, n6, n7, n8, n9, n10, n11, n12, n13, n14, x);
+  signal estadoZ : tipo_estadoZ := n1;
+  signal estadoM : tipo_estadoM := n1;
 begin
 
 
   process(clock_in, ligar, escolher)
   begin
     if (ligar = '1') then
+	 
 		if rising_edge(clock_in) then
-        if ((escolherA xor escolherP) = '1') then
-            escolherP <= escolher;
+
+			if ((escolher xor escolherP) = '1') then
             counterZ <= 0;
             counterM <= 0;
+				estadoZ <= x;
+				estadoM <= x;
 			end if;
-
-		
+			
+			
 				if counterT = T-1 then
 					counterT <= 0;
 					clockT <= not clockT;
@@ -533,7 +536,7 @@ begin
 
                 when n1 =>  
 
-                    if counterS = 113635 then
+                    if counterS = 113636 then
                         counterS <= 0;
                         clockS <= not clockS;
                     end if;
@@ -547,7 +550,7 @@ begin
 
                 when n2 =>  
 
-                    if counterS = 110131 then
+                    if counterS = 90253 then
                         counterS <= 0;
                         clockS <= not clockS;
                     end if;
@@ -733,6 +736,7 @@ begin
                 estadoM <= n1; 
             end case;
         end if;
+		escolherP <= escolher;
 	 end if;
 	 
     elsif (ligar = '0') then
@@ -746,7 +750,7 @@ begin
     end if;
   end process;
 
-  escolherA <= escolher;
   clock_out <= clockS; 
+  medida <= clockT;
 
 end architecture Behavioral;
